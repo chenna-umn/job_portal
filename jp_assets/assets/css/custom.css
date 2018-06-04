@@ -1,0 +1,87 @@
+/* Add here all your css styles (customizations) */
+
+
+
+@media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+  .menudynamic {
+	    padding-left: 2px !important;
+            padding-right: 2px !important;
+	}
+}
+@media (min-device-width: 1025px) {
+  .menudynamic {
+	    padding-left: 3px !important;
+            padding-right: 3px !important;
+	}
+}
+.recbody{
+    background-image: url(../../assets/img/bg/bg3.jpg);
+    background-size: 100%;
+}
+.recheader{
+    background-image: url(../../assets/img/bg/headerbg2.jpg);
+    background-repeat: no-repeat;background-size: 100%;
+}	
+ .catmenu1{
+    position:fixed !important;    
+    top:50 !important;   
+}
+.bgcolor0{
+    background: #CECEF6 !important;
+}
+.bgcolor1{
+    background: #F6CED8 !important;
+}
+.bgcolor2{
+    background: #A9BCF5;
+}
+.bgcolor3{
+    background: #D0F5A9;
+}
+.bgcolor4{
+    background: #ECF6CE;
+}
+.bgcolor5{
+    background: #F3E2A9;
+}
+.bgcolor6{
+    background: #F5BCA9;
+}
+.bgcolor7{
+    background: #FFCFCF;
+}
+.bgcolor8{
+    background: #BCFEF9;
+}
+.bgcolor9{
+    background: #FFF4B1;
+}
+
+
+@media (max-width: 991px) {
+  .divstylesavejob{
+    font-weight: 600;
+    padding: 0px 15px;
+    font-size: 14px;    
+}
+.divstylepadding{   
+    padding: 2px 15px;        
+}
+}
+@media (min-width: 992px) {
+  .divstylesavejob{
+    font-weight: 600;
+    padding: 5px 15px;
+    font-size: 14px;    
+}
+.divstylepadding{   
+    padding: 8px 15px;        
+}
+}
+.search-advance{
+    font-size: 15px; 
+    margin-bottom: 8px; 
+    padding: 6px 12px;
+   
+    
+}

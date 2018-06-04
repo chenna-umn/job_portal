@@ -1,0 +1,317 @@
+
+
+    <!--=== Profile ===-->
+    <div class="profile container content">
+    	<div class="row">
+            <!--Left Sidebar-->
+              <div class="col-md-3 md-margin-bottom-40">
+            <?php $this->renderPartial('/admin/adminleftbar');?>
+            <!--End Left Sidebar-->
+              </div>
+            <div class="col-md-9">
+                <!--Profile Body-->
+                <div class="profile-body">
+                     <?php if(Yii::app()->user->hasFlash('success')){?>
+                            <div class="row margin-bottom-10">
+                                <div class="info alert alert-info fade in">
+                                    <button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>
+                                    <?php echo Yii::app()->user->getFlash('success'); ?>
+                                </div>
+                            </div>
+                    <?php } ?>
+                    <div class="row margin-bottom-10">                      
+                        <a href="<?php echo Yii::app()->request->baseUrl.'/City/index';?>"><button type="button" class="btn-u btn-u-lg rounded-4x btn-u-purple">Total Cities : <?php echo City::model()->recordCount('all');?></button></a> 
+                        <a href="<?php echo Yii::app()->request->baseUrl.'/City/CityByStatus?field=status&value=active';?>"><button type="button" class="btn-u btn-u-lg rounded-4x btn-u-sea">Active Cities : <?php echo City::model()->recordCount('active');?></button></a> 
+                        <a href="<?php echo Yii::app()->request->baseUrl.'/City/CityByStatus?field=status&value=inactive';?>"><button type="button" class="btn-u btn-u-lg rounded-4x btn-u-default">In Active Cities : <?php echo City::model()->recordCount('inactive');?></button></a> 
+                        
+                    </div>
+                    <div class="row margin-bottom-10"> 
+                        <div class="col-md-3">
+                            <a href="<?php echo Yii::app()->request->baseUrl.'/City/create';?>"><button type="button" class="btn-u">Add New City</button></a>     
+                        </div>
+                          <div class="col-md-3">
+                            <a href="<?php echo Yii::app()->request->baseUrl.'/City/createMultiple';?>"><button type="button" class="btn-u btn-u-orange">Add Multi Cities</button></a>  
+                        </div>                       
+                        
+                        <div class="col-md-6">
+                            <div class="input-group">
+                            <form action="<?php echo Yii::app()->request->baseUrl.'/City/CityByStatus';?>" method="get">
+                            <input type="hidden" name="field" value="name">
+                            <input type="text" name="value" placeholder="Search" class="form-control">                            
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn-u">Go</button>
+                            </span>
+                            </form>
+                            </div> 
+                        </div>                        
+                    </div>
+                    <div class="row margin-bottom-10">                      
+                        <div class="col-md-6">
+                            <form action="" class="sky-form" method="post">	
+                                <section>
+                                    <div class="row" style="margin-left: 0px;">
+                                            <label class="label col col-4">Search by</label>
+                                            <div class="col col-8">
+                                                    <label class="select">
+                                                         <select onchange="getstates(this.value);">
+                                                             <option value="">Select Country</option>
+                                                        <?php  $categories = Country::model()->findAll(array('order'=>'name ASC'));
+                                                        if(isset($categories) && !empty($categories)){ 
+                                                            foreach ($categories as $key => $value) { ?>
+                                                                    <option value="<?php echo $value['id'];?>"><?php echo $value['name'];?></option>
+
+                                                           <?php } } ?>                                                                                                             
+                                                       </select>
+                                                        <i></i>
+                                                    </label>
+                                            </div>
+                                    </div>
+                                </section>                                                    
+                            </form> 
+                        </div>
+                        <div class="col-md-6">
+                            <form action="" class="sky-form" method="post">	
+                                <section>
+                                    <div class="row" style="margin-left: 0px;">
+                                            <label class="label col col-2">State</label>
+                                            <div class="col col-10">
+                                                    <label class="select">
+                                                        <select id="stateselect" disabled onchange="searchBy(this.value);" >
+                                                             <option value="">Select Country to get State List.</option>                                                                                                                                                                   
+                                                       </select>
+                                                        <i></i>
+                                                    </label>
+                                            </div>
+                                    </div>
+                                </section>                                                    
+                            </form>
+                        </div>
+                    </div>
+                    <!--Service Block v3-->
+                    <div class="row margin-bottom-10">
+                        <p>Result Count : <?php echo $count; ?></p>
+                        <?php 
+                            $this->widget('CLinkPager', array(
+                                'pages' => $pages,
+                            ));                            
+
+                            $this->widget('CListPager', array(
+                                    'pages'=>$pages,
+                            ));                            
+                            
+                        ?>
+                        
+                    </div><!--/end row-->                   
+                   
+                    <div class="row margin-bottom-10">                       
+                                    <div class="table-search-v1 margin-bottom-20">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Country</th>
+                                                        <th>State</th>
+                                                        <th>Created On</th>
+                                                        <th>Updated On</th>
+                                                        <th>Edit</th>
+                                                        <th>Status</th> 
+                                                        <th>Display On Home Page</th>
+                                                        <th>Delete</th> 
+                                                        <th>Alter Status</th> 
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                     <?php 
+                                                     if(isset($models) && !empty($models)){
+                                                            foreach($models as $model){?>
+                                                    <tr id="record<?php echo $model['id'];?>">
+                                                        <td>
+                                                            <?php echo $model['name'];?>
+                                                        </td>
+                                                        <td>
+                                                            <?php echo $model['countryname'];?>
+                                                        </td>
+                                                         <td>
+                                                            <?php echo $model['statename'];?>
+                                                        </td>
+                                                        <td>
+                                                            <?php echo $model['created_on'];?>
+                                                        </td>
+                                                        <td>
+                                                             <?php echo $model['updated_on'];?>  
+                                                        </td>
+                                                        <td>
+                                                            <a href="<?php echo Yii::app()->request->baseUrl.'/City/update?id='.$model['id'];?>" target="_blank"><i class="fa fa-pencil"></i></a>
+                                                        </td>
+                                                        <td>
+                                                            <?php 
+                                                                if($model['status']==1){?>
+                                                                    <span class="label label-success" id="status<?php echo $model['id'];?>">Active</span>
+                                                                <?php } else if($model['status']==0){ ?>
+                                                                    <span class="label label-warning" id="status<?php echo $model['id'];?>">InActive</span>
+                                                              <?php  }
+                                                            ?>
+                                                        </td> 
+                                                        <td>
+                                                            <?php 
+                                                                if($model['display_on_top']==1){?>
+                                                                    <span class="label label-success">Yes</span>
+                                                                <?php } else if($model['display_on_top']==0){ ?>
+                                                                    <span class="label label-warning">No</span>
+                                                              <?php  }
+                                                            ?>
+                                                        </td> 
+                                                        <td>
+                                                            <a href="javascript:void(0);" onclick="deleteRecord(<?php echo $model['id'];?>)"><i class="fa fa-trash-o"></i></a>
+                                                        </td>
+                                                        <td>
+                                                            <?php 
+                                                                if($model['status']==1){?>
+                                                             <a href="javascript:void(0);" onclick="makeStatusRecord('<?php echo $model['id'];?>','<?php echo $model['status'];?>')" style="text-decoration:none;">   <span class="label label-warning" id="makestatus<?php echo $model['id'];?>"> Make In Active</span> </a>
+                                                                <?php } else if($model['status']==0){ ?>
+                                                             <a href="javascript:void(0);" onclick="makeStatusRecord('<?php echo $model['id'];?>','<?php echo $model['status'];?>')" style="text-decoration:none;">   <span class="label label-success" id="makestatus<?php echo $model['id'];?>">Make Active</span> </a>
+                                                              <?php  }
+                                                            ?>
+                                                             <input type="hidden" id="hiddenmakestatus<?php echo $model['id'];?>" value="<?php echo $model['status'];?>">
+                                                        </td>
+                                                    </tr>
+                                                     <?php } }else{ ?>
+                                                         <div class="alert alert-info fade in">
+                                                            <strong>Oops!</strong> Currently there are no City exists.
+                                                        </div>
+                                                   <?php  }
+                                                     ?>
+                                                </tbody>
+                                            </table>
+                                        </div>    
+                                    </div>
+                            
+                    </div><!--/end row-->
+                    <div class="row margin-bottom-10">
+                        <?php 
+                            $this->widget('CLinkPager', array(
+                                'pages' => $pages,
+                            ));                            
+
+                            $this->widget('CListPager', array(
+                                    'pages'=>$pages,
+                            ));                           
+                           
+                        ?>
+                    </div><!--/end row-->
+                    <!--End Service Block v3-->
+
+                    <hr>
+
+
+                    <hr>
+
+                </div>
+                <!--End Profile Body-->
+            </div>
+        </div><!--/end row-->
+    </div><!--/container-->    
+    <!--=== End Profile ===-->
+    <?php
+        Yii::app()->clientScript->registerScript(
+           'myHideEffect',
+           '$(".info").animate({opacity: 1.0}, 5000).fadeOut("slow");',
+           CClientScript::POS_READY
+        );
+    ?>
+    <script>
+        function deleteRecord(recordId){
+            var message = confirm("Are You Sure!\n That You want to delete Record.");
+            var baseurl = "<?php echo Yii::app()->request->baseUrl;?>";           
+                if (message == true) {                   
+                     jQuery.ajax({                            
+                            url: baseurl+'/City/delete',
+                            type: "POST",
+                            data: {id: recordId},  
+                            error: function(){
+                                     alert("Something Went Wrong...Please Try Later.");
+                                },
+                            success: function(resp){                   
+                                    if(resp=="success"){
+                                           document.getElementById('record'+recordId).style.display = "none";
+                                    }else{
+                                           alert("Something Went Wrong...Please Try Later.");
+                                    }
+                                }
+                            });
+                } else {
+                   alert("Ok. You Have Cancelled The Deletion.");
+                }
+            
+        }
+        function makeStatusRecord(recordId,status){
+            var message = confirm("Are You Sure!\n That You want to Update Status.");
+            var baseurl = "<?php echo Yii::app()->request->baseUrl;?>";  
+            var currentstatus = document.getElementById('hiddenmakestatus'+recordId).value;           
+                if (message == true) {                   
+                     jQuery.ajax({                            
+                            url: baseurl+'/City/MakeStatus',
+                            type: "POST",
+                            data: {id: recordId},  
+                            error: function(){
+                                     alert("Something Went Wrong...Please Try Later.");
+                                },
+                            success: function(resp){                   
+                                    if(resp=="success"){
+                                        if(currentstatus=="1"){
+                                          $('#status'+recordId).removeClass('label-success');  
+                                          $('#status'+recordId).addClass('label-warning');  
+                                          document.getElementById('status'+recordId).innerHTML = "InActive";
+                                          $('#makestatus'+recordId).removeClass('label-warning');  
+                                          $('#makestatus'+recordId).addClass('label-success'); 
+                                          document.getElementById('makestatus'+recordId).innerHTML = "Make Active";
+                                          document.getElementById('hiddenmakestatus'+recordId).value = "0";
+                                        }else{             
+                                            $('#status'+recordId).removeClass('label-warning');  
+                                            $('#status'+recordId).addClass('label-success');  
+                                            document.getElementById('status'+recordId).innerHTML = "Active";
+                                            $('#makestatus'+recordId).removeClass('label-success');  
+                                            $('#makestatus'+recordId).addClass('label-warning'); 
+                                            document.getElementById('makestatus'+recordId).innerHTML = "Make InActive";
+                                            document.getElementById('hiddenmakestatus'+recordId).value = "1"; 
+                                        }
+                                    }else{
+                                           alert("Something Went Wrong...Please Try Later.");
+                                    }
+                                }
+                            });
+                } else {
+                   alert("Ok. You Have Cancelled The Deletion.");
+                }
+            
+        }
+        function searchBy(id){
+            var baseurl = "<?php echo Yii::app()->request->baseUrl;?>"; 
+            var url = baseurl+'/City/SearchByState?id='+id;
+            window.location = url;
+            window.location.replace (url);
+            
+        }
+        function getstates(countryId){
+            if(countryId != null){
+                var baseurl = "<?php echo Yii::app()->request->baseUrl;?>"; 
+                document.getElementById("stateselect").disabled=false;
+                jQuery.ajax({                            
+                            url: baseurl+'/City/getStateList',
+                            type: "POST",
+                            data: {id: countryId},  
+                            error: function(){
+                                     alert("Something Went Wrong...Please Try Later.");
+                                },
+                            success: function(resp){                  
+                                    jQuery("#stateselect").html(resp);
+                                }
+                            });
+            }else{
+                alert("Please select Country To get State List")
+            }
+        }
+      
+    </script>
+    <?php $this->renderPartial('//layouts/footerv'); ?>
